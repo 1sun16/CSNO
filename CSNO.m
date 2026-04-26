@@ -9,7 +9,6 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [bestx, bestf, ConvergenceCurve] = CSNO(fobj, dim, lb, ub, options)
-%% 1. 解析参数 (从 options 提取)
 if isfield(options, 'PopulationSize')
     N = options.PopulationSize;
 elseif isfield(options, 'PopSize')
@@ -26,18 +25,16 @@ else
     error('CSNO:MissingBudget', 'options.MaxIterations is required.');
 end
 
-% --- 核心 CSNO 参数 ---
-base_neighbors = min(7, N - 1);         % 此时的 N 是正常的数字了
+base_neighbors = min(7, N - 1);         
 ConvergenceCurve = zeros(1, T);
 
-% --- 初始化种群 ---
 positions = lb + (ub - lb) .* rand(N, dim);
 fitness = zeros(N, 1);
 acoustic_memory = zeros(N, base_neighbors); % Acoustic Interactive Memory (AIM)
 
 % Initial evaluation
 for i = 1:N
-    fitness(i) = fobj(positions(i, :)); % 统一使用 fobj
+    fitness(i) = fobj(positions(i, :));
 end
 [bestf, best_idx] = min(fitness);
 bestx = positions(best_idx, :);
